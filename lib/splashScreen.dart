@@ -2,31 +2,36 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mani/cameraActivity.dart';
 
-    void main() => runApp( MaterialApp(
-      theme: ThemeData(primaryColor : Colors.blueAccent, accentColor :Colors.white),
+void main() => runApp(MaterialApp(
+      theme:
+          ThemeData(primaryColor: Colors.blueAccent, accentColor: Colors.white),
       home: SplashScreen(),
     ));
 
 class SplashScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() =>  _SplashScreenState();
-
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(Duration(seconds: 3), ()=>print("Splash Done"));
+    Timer(
+      Duration(seconds: 3),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => CameraActivity()),
+      ),
+    );
   }
 
   @override
-    Widget build(BuildContext context) {
-    return  Scaffold(
-      body:  Stack(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
           Container(
@@ -38,43 +43,45 @@ class _SplashScreenState extends State<SplashScreen> {
               Expanded(
                 flex: 2,
                 child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 60.0,
-                        child: Icon(
-                          Icons.attach_money,
-                            color: Colors.greenAccent,
-                            size: 55.0,
-                        ),
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 60.0,
+                      child: Icon(
+                        Icons.attach_money,
+                        color: Colors.greenAccent,
+                        size: 55.0,
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 10.0)),
-                      Text(
-                          "MANI",
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10.0)),
+                    Text(
+                      "MANI",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                      )
-                    ],
-                  )
-                ),
+                          color: Colors.white,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                )),
               ),
               Expanded(
                 flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[CircularProgressIndicator(),
-                      Padding(padding: EdgeInsets.only(top: 20.0),
-                      ),
-                      Text("Mobile Aided Note Identifier",style: TextStyle(color: Colors.white,fontSize: 20.0,fontWeight: FontWeight.bold)
-                      )
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                    ),
+                    Text("Mobile Aided Note Identifier",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold))
+                  ],
+                ),
               )
             ],
           )
