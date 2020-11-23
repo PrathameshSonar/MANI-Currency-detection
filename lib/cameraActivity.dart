@@ -1,5 +1,6 @@
 
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
@@ -14,6 +15,10 @@ class CameraActivity extends StatefulWidget {
 }
 
 class _CameraActivityState extends State<CameraActivity> {
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
