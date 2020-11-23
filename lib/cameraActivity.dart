@@ -1,10 +1,12 @@
 
+
 import 'package:flutter/material.dart';
 
-void main() => runApp( MaterialApp(
-  theme: ThemeData(primaryColor : Colors.blueAccent, accentColor :Colors.white),
-  home: CameraActivity(),
-));
+void main() => runApp(MaterialApp(
+      theme:
+          ThemeData(primaryColor: Colors.blueAccent, accentColor: Colors.white),
+      home: CameraActivity(),
+    ));
 
 class CameraActivity extends StatefulWidget {
   @override
@@ -14,6 +16,19 @@ class CameraActivity extends StatefulWidget {
 class _CameraActivityState extends State<CameraActivity> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(title: Text('Scan Currency')),
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          RaisedButton(
+            onPressed: () {},
+            color: Colors.blueAccent,
+            child: const Text('Torch ON', style: TextStyle(fontSize: 20)),
+          ),
+
+        ],
+      ),
+    );
   }
 }
