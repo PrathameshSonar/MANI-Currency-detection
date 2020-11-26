@@ -1,5 +1,3 @@
-
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
@@ -15,23 +13,52 @@ class CameraActivity extends StatefulWidget {
 }
 
 class _CameraActivityState extends State<CameraActivity> {
+  List<CameraDescription> cameras;
+  CameraController controller;
+  bool isReady = false;
 
+  @override
+  void initState() {
+    super.initState();
+    setupCameras();
+  }
 
-
+  Future<void> setupCameras() async {
+    try {
+      cameras = await availableCameras();
+      controller = new CameraController(cameras[0], ResolutionPreset.medium);
+      await controller.initialize();
+    } on CameraException catch (_) {
+      setState(() {
+        isReady = false;
+      });
+    }
+    setState(() {
+      isReady = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Scan Currency')),
-      body: Stack(
-        fit: StackFit.expand,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          RaisedButton(
-            onPressed: () {},
-            color: Colors.blueAccent,
-            child: const Text('Torch ON', style: TextStyle(fontSize: 20)),
+          AspectRatio(
+            aspectRatio: controller.value.aspectRatio,
+            child: CameraPreview(controller),
           ),
-
+          ButtonTheme(
+            minWidth: 200.0,
+            height: 70.0,
+            child: RaisedButton(
+              onPressed: () {},
+              color: Colors.blueAccent,
+              child: const Text('Torch ON', style: TextStyle(fontSize: 20)),
+            ),
+          ),
         ],
       ),
     );
