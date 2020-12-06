@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
@@ -42,24 +43,30 @@ class _CameraActivityState extends State<CameraActivity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Scan Currency')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: CameraPreview(controller),
-          ),
-          ButtonTheme(
-            minWidth: 200.0,
-            height: 70.0,
-            child: RaisedButton(
-              onPressed: () {},
-              color: Colors.blueAccent,
-              child: const Text('Torch ON', style: TextStyle(fontSize: 20)),
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: CameraPreview(controller),
             ),
-          ),
-        ],
+            ButtonTheme(
+              minWidth: 200.0,
+              height: 150.0,
+              child: RaisedButton(
+                onPressed: () {},
+                color: Colors.blueAccent,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 90.0,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
