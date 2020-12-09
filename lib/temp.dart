@@ -1,22 +1,12 @@
+// A widget that displays the picture taken by the user.
+class DisplayPictureScreen extends StatefulWidget {
+  String imagePath;
+  List outputs;
+  File image;
+  bool loading = false;
 
-import 'dart:io';
+  DisplayPictureScreen({Key key, this.imagePath, this.image, this.loading, this.outputs}) : super(key: key);
 
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
-
-void main() => runApp(MaterialApp(
-  theme:
-  ThemeData(primaryColor: Colors.blueAccent, accentColor: Colors.white),
-  home: Tensorflow(),
-));
-
-class Tensorflow extends StatefulWidget {
-  @override
-  _TensorflowState createState() => _TensorflowState();
-}
-
-class _TensorflowState extends State<Tensorflow> {
   List _outputs;
   File _image;
   bool _loading = false;
@@ -68,30 +58,16 @@ class _TensorflowState extends State<Tensorflow> {
     });
     classifyImage(_image);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "Tensorflow Lite",
-          style: TextStyle(color: Colors.white, fontSize: 25),
-        ),
-        backgroundColor: Colors.amber,
-        elevation: 0,
-      ),
-      body:
-
-
-      Container(
-        color: Colors.white,
+      appBar: AppBar(title: Text('Display the Picture')),
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
+      body: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _loading ? Container(
-              height: 300,
-              width: 300,
-            ):
             Container(
               margin: EdgeInsets.all(20),
               width: MediaQuery.of(context).size.width,
@@ -99,31 +75,25 @@ class _TensorflowState extends State<Tensorflow> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _image == null ? Container() : Image.file(_image),
+                  image == null ? Container() : Image.file(image),
                   SizedBox(
                     height: 20,
                   ),
-                  _image == null ? Container() : _outputs != null ?
-                  Text(_outputs[0]["label"],style: TextStyle(color: Colors.black,fontSize: 20),
+                  image == null ? Container() : outputs != null ?
+                  Text(outputs[0]["label"],style: TextStyle(color: Colors.black,fontSize: 20),
                   ) : Container(child: Text(""))
                 ],
               ),
             ),
+            Image.file(File(imagePath)),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),
-            FloatingActionButton(
-              tooltip: 'Pick Image',
-              onPressed: pickImage,
-              child: Icon(Icons.add_a_photo,
-                size: 20,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.amber,
-            ),
+
           ],
         ),
-      ),
+      ),//Image.file(File(imagePath)),
+
     );
   }
 }
