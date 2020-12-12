@@ -103,9 +103,15 @@ class _TensorflowState extends State<Tensorflow> {
                   SizedBox(
                     height: 20,
                   ),
+
                   _image == null ? Container() : _outputs != null ?
                   Text(_outputs[0]["label"],style: TextStyle(color: Colors.black,fontSize: 20),
+                  ) : Container(child: Text("")),
+
+                  _image == null ? Container() : _outputs != null ?
+                  Text(_image.path,style: TextStyle(color: Colors.black,fontSize: 20),
                   ) : Container(child: Text(""))
+
                 ],
               ),
             ),

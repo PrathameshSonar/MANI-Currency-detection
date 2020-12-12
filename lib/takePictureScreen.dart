@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:tflite/tflite.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -54,7 +56,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -127,27 +129,124 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 }
 
 class DisplayPictureScreen extends StatefulWidget {
-
   final String imagePath;
 
   const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
 
   @override
-  _DisplayPictureScreenState createState() => _DisplayPictureScreenState();
+  _DisplayPictureScreenState createState() =>
+      _DisplayPictureScreenState(imagePath);
 }
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  final String imagePath;
+  List _outputs;
+  File _image;
+  bool _loading = false;
 
+  _DisplayPictureScreenState(this.imagePath);
+
+  @override
+  void initState() {
+    super.initState();
+    _loading = true;
+    loadModel().then((value) {
+      setState(() {
+        _loading = false;
+      });
+    });
+
+    initClassify(imagePath);
+  }
+
+  loadModel() async {
+    await Tflite.loadModel(
+      model: "assets/model_unquant.tflite",
+      labels: "assets/labels.txt",
+      numThreads: 1,
+    );
+  }
+
+  classifyImage(File image) async {
+    var output = await Tflite.runModelOnImage(
+        path: image.path,
+        imageMean: 0.0,
+        imageStd: 255.0,
+        numResults: 2,
+        threshold: 0.2,
+        asynch: true);
+    setState(() {
+      _loading = false;
+      _outputs = output;
+    });
+  }
+
+  initClassify(imagePath) async {
+    var image = File(imagePath);
+//   var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
+    setState(() {
+      _loading = true;
+      _image = image;
+    });
+    classifyImage(_image);
+  }
+
+  @override
+  void dispose() {
+    Tflite.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Display the Picture')),
+      appBar: AppBar(
+        title: Text('Display the Picture'),
+        elevation: 10,
+      ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _image == null ? Container() : Image.file(File(imagePath)),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _image == null
+                      ? Container()
+                      : _outputs != null
+                          ? Text(
+                                "₹ " + _outputs[0]["label"],
+                              style:
+                                  TextStyle(color: Colors.yellow, fontSize: 70),
+                            )
+                          : Container(child: Text("")),
+
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+
+            //
+            // Image.file(
+            //   File(imagePath),
+            // ),
+            // Text(imagePath),
+          ],
+        ),
+      ),
     );
   }
 }
-
-

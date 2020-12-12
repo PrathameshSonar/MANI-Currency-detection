@@ -28,6 +28,7 @@ dependencies:
   path: ^1.6.4
   tflite: ^1.1.1
   image_picker: ^0.6.7+14
+  flutter_tts: ^2.0.0
   light: ^1.0.0
   flashlight: ^0.1.1
   lamp: ^0.0.6
