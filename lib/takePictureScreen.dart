@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
+
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
+
+
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -77,53 +81,109 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: 650.0,
+            child: FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the Future is complete, display the preview.
+                  return CameraPreview(_controller);
+                } else {
+                  // Otherwise, display a loading indicator.
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          ButtonTheme(
+            minWidth: 300.0,
+            height: 90.0,
 
-            // Construct the path where the image should be saved using the
-            // pattern package.
-            final path = join(
-              // Store the picture in the temp directory.
-              // Find the temp directory using the `path_provider` plugin.
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
-
-            // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture(path);
-
-            // If the picture was taken, display it on a new screen.
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: path),
+            child: RaisedButton(
+              elevation: 10.0,
+              child: Icon(Icons.camera_alt, size: 70.0,),
+              // Provide an onPressed callback.
+              color: Colors.blueGrey,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-            );
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
+              onPressed: () async {
+                // Take the Picture in a try / catch block. If anything goes wrong,
+                // catch the error.
+                try {
+                  // Ensure that the camera is initialized.
+                  await _initializeControllerFuture;
+
+                  // Construct the path where the image should be saved using the
+                  // pattern package.
+                  final path = join(
+                    // Store the picture in the temp directory.
+                    // Find the temp directory using the `path_provider` plugin.
+                    (await getTemporaryDirectory()).path,
+                    '${DateTime.now()}.png',
+                  );
+
+                  // Attempt to take a picture and log where it's been saved.
+                  await _controller.takePicture(path);
+
+                  // If the picture was taken, display it on a new screen.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DisplayPictureScreen(imagePath: path),
+                    ),
+                  );
+                } catch (e) {
+                  // If an error occurs, log the error to the console.
+                  print(e);
+                }
+              },
+
+            ),
+          )
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.camera_alt),
+      //   // Provide an onPressed callback.
+      //   onPressed: () async {
+      //     // Take the Picture in a try / catch block. If anything goes wrong,
+      //     // catch the error.
+      //     try {
+      //       // Ensure that the camera is initialized.
+      //       await _initializeControllerFuture;
+      //
+      //       // Construct the path where the image should be saved using the
+      //       // pattern package.
+      //       final path = join(
+      //         // Store the picture in the temp directory.
+      //         // Find the temp directory using the `path_provider` plugin.
+      //         (await getTemporaryDirectory()).path,
+      //         '${DateTime.now()}.png',
+      //       );
+      //
+      //       // Attempt to take a picture and log where it's been saved.
+      //       await _controller.takePicture(path);
+      //
+      //       // If the picture was taken, display it on a new screen.
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => DisplayPictureScreen(imagePath: path),
+      //         ),
+      //       );
+      //     } catch (e) {
+      //       // If an error occurs, log the error to the console.
+      //       print(e);
+      //     }
+      //   },
+      // ),
     );
   }
 }
@@ -159,12 +219,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     initClassify(imagePath);
   }
 
-  loadModel() async {
-    await Tflite.loadModel(
-      model: "assets/model_unquant.tflite",
-      labels: "assets/labels.txt",
-      numThreads: 1,
-    );
+  initClassify(imagePath) async {
+    var image = File(imagePath);
+    if (image == null) return null;
+    setState(() {
+      _loading = true;
+      _image = image;
+    });
+    classifyImage(_image);
   }
 
   classifyImage(File image) async {
@@ -175,21 +237,20 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         numResults: 2,
         threshold: 0.2,
         asynch: true);
+
+
     setState(() {
       _loading = false;
       _outputs = output;
     });
   }
 
-  initClassify(imagePath) async {
-    var image = File(imagePath);
-//   var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-    setState(() {
-      _loading = true;
-      _image = image;
-    });
-    classifyImage(_image);
+  loadModel() async {
+    await Tflite.loadModel(
+      model: "assets/model_unquant.tflite",
+      labels: "assets/labels.txt",
+      numThreads: 1,
+    );
   }
 
   @override
@@ -229,6 +290,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 "₹ " + _outputs[0]["label"],
                               style:
                                   TextStyle(color: Colors.yellow, fontSize: 70),
+                      
                             )
                           : Container(child: Text("")),
 
@@ -239,11 +301,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               height: MediaQuery.of(context).size.height * 0.01,
             ),
 
-            //
-            // Image.file(
-            //   File(imagePath),
-            // ),
-            // Text(imagePath),
           ],
         ),
       ),

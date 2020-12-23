@@ -83,6 +83,7 @@ class _CameraActivityState extends State<CameraActivity> {
                   _takePicture(context);
                 },
                 color: Colors.blueAccent,
+
                 child: Icon(
                   Icons.camera_alt,
                   size: 90.0,
