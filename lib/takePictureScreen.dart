@@ -289,7 +289,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           ? Text(
                                 "₹ " + _outputs[0]["label"],
                               style:
-                                  TextStyle(color: Colors.yellow, fontSize: 70),
+                                  TextStyle(color: Colors.yellow, fontSize: 60),
                       
                             )
                           : Container(child: Text("")),
@@ -297,9 +297,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
-            ),
+
 
           ],
         ),
