@@ -23,15 +23,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   camera: ^0.5.8+11
   path_provider: ^1.6.24
   path: ^1.6.4
   tflite: ^1.1.1
+  flutter_launcher_icons: "^0.7.0"
+
   image_picker: ^0.6.7+14
   flutter_tts: ^2.0.0
   light: ^1.0.0
   flashlight: ^0.1.1
   lamp: ^0.0.6
+
 
 
 
@@ -45,11 +50,18 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/launcher/icon.png"
+  image_path_android: "assets/launcher/icon.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -60,6 +72,13 @@ flutter:
   assets:
     - assets/labels.txt
     - assets/model_unquant.tflite
+    - assets/locale/en.json
+    - assets/locale/localisation_marathi.json
+    - assets/locale/hi.json
+    - assets/locale/localisation_punjabi.json
+    - assets/locale/localisation_urdu.json
+    - assets/locale/localisation_kannada.json
+    - assets/launcher/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

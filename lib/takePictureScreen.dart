@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
-
 
 
 Future<void> main() async {
@@ -30,6 +27,7 @@ Future<void> main() async {
         // Pass the appropriate camera to the TakePictureScreen widget.
         camera: firstCamera,
       ),
+
     ),
   );
 }
@@ -62,22 +60,37 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Define the resolution to use.
       ResolutionPreset.high,
     );
+    print(_controller);
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
-  }
 
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
-    super.dispose();
+    print(_initializeControllerFuture);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Take a picture')),
+      appBar: AppBar(
+        title: Text("Take a Picture"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.language,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context){
+                    //return LanguageSelectorPage();
+                  }
+                )
+              );
+            },
+          ),
+        ],
+      ),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -90,6 +103,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   // If the Future is complete, display the preview.
+                  print("preview");
+                  print(_controller);
                   return CameraPreview(_controller);
                 } else {
                   // Otherwise, display a loading indicator.
@@ -104,10 +119,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           ButtonTheme(
             minWidth: 300.0,
             height: 90.0,
-
             child: RaisedButton(
               elevation: 10.0,
-              child: Icon(Icons.camera_alt, size: 70.0,),
+              child: Icon(
+                Icons.camera_alt,
+                size: 70.0,
+              ),
               // Provide an onPressed callback.
               color: Colors.blueGrey,
               shape: RoundedRectangleBorder(
@@ -116,6 +133,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               onPressed: () async {
                 // Take the Picture in a try / catch block. If anything goes wrong,
                 // catch the error.
+                HapticFeedback.vibrate();
                 try {
                   // Ensure that the camera is initialized.
                   await _initializeControllerFuture;
@@ -136,7 +154,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DisplayPictureScreen(imagePath: path),
+                      builder: (context) =>
+                          DisplayPictureScreen(imagePath: path),
                     ),
                   );
                 } catch (e) {
@@ -144,47 +163,18 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   print(e);
                 }
               },
-
             ),
           )
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.camera_alt),
-      //   // Provide an onPressed callback.
-      //   onPressed: () async {
-      //     // Take the Picture in a try / catch block. If anything goes wrong,
-      //     // catch the error.
-      //     try {
-      //       // Ensure that the camera is initialized.
-      //       await _initializeControllerFuture;
-      //
-      //       // Construct the path where the image should be saved using the
-      //       // pattern package.
-      //       final path = join(
-      //         // Store the picture in the temp directory.
-      //         // Find the temp directory using the `path_provider` plugin.
-      //         (await getTemporaryDirectory()).path,
-      //         '${DateTime.now()}.png',
-      //       );
-      //
-      //       // Attempt to take a picture and log where it's been saved.
-      //       await _controller.takePicture(path);
-      //
-      //       // If the picture was taken, display it on a new screen.
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => DisplayPictureScreen(imagePath: path),
-      //         ),
-      //       );
-      //     } catch (e) {
-      //       // If an error occurs, log the error to the console.
-      //       print(e);
-      //     }
-      //   },
-      // ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _controller.dispose();
+    super.dispose();
   }
 }
 
@@ -238,7 +228,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         threshold: 0.2,
         asynch: true);
 
-
     setState(() {
       _loading = false;
       _outputs = output;
@@ -263,7 +252,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Display the Picture'),
+        title: Text("Result"),
         elevation: 10,
       ),
       // The image is stored as a file on the device. Use the `Image.file`
@@ -287,18 +276,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       ? Container()
                       : _outputs != null
                           ? Text(
-                                "₹ " + _outputs[0]["label"],
+                              "₹ " + _outputs[0]["label"],
                               style:
                                   TextStyle(color: Colors.yellow, fontSize: 60),
-                      
                             )
                           : Container(child: Text("")),
-
                 ],
               ),
             ),
-
-
           ],
         ),
       ),

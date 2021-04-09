@@ -1,15 +1,9 @@
 import 'dart:async';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mani/cameraActivity.dart';
 import 'package:mani/takePictureScreen.dart';
-
-void main() => runApp(MaterialApp(
-      theme:
-          ThemeData(primaryColor: Colors.blueAccent, accentColor: Colors.white),
-      home: SplashScreen(),
-    ));
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -21,10 +15,31 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Timer(
-      Duration(seconds: 3),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => TakePictureScreen()),
+      Duration(seconds: 2),
+      () => cameraInit(),
+    );
+  }
+
+  Future<void> cameraInit() async {
+    // Ensure that plugin services are initialized so that `availableCameras()`
+    // can be called before `runApp()`
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+
+    // Get a specific camera from the list of available cameras.
+    final firstCamera = cameras.first;
+
+    runApp(
+      MaterialApp(
+        theme: ThemeData.dark(),
+        home: TakePictureScreen(
+          // Pass the appropriate camera to the TakePictureScreen widget.
+          camera: firstCamera,
+        ),
       ),
     );
   }
@@ -36,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: Colors.blueAccent),
+            decoration: BoxDecoration(color: Colors.blueGrey),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -47,21 +62,15 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 60.0,
-                      child: Icon(
-                        Icons.attach_money,
-                        color: Colors.greenAccent,
-                        size: 55.0,
-                      ),
-                    ),
+                    Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Image.asset('assets/launcher/icon.png')),
                     Padding(padding: EdgeInsets.only(top: 10.0)),
                     Text(
-                      "MANI",
+                      "M A N I",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24.0,
+                          fontSize: 50.0,
                           fontWeight: FontWeight.bold),
                     )
                   ],
@@ -76,11 +85,13 @@ class _SplashScreenState extends State<SplashScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
                     ),
-                    Text("Mobile Aided Note Identifier",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold))
+                    Text(
+                      "Mobile Aided Note Identifier",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
               )
