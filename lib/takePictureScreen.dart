@@ -28,7 +28,6 @@ Future<void> main() async {
         // Pass the appropriate camera to the TakePictureScreen widget.
         camera: firstCamera,
       ),
-
     ),
   );
 }
@@ -50,8 +49,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -69,19 +66,18 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     _initializeControllerFuture = _controller.initialize();
 
     print(_initializeControllerFuture);
-
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.of(context).text("take_picture_screen"),),
+        title: Text(
+          AppTranslations.of(context).text("take_picture_screen"),
+        ),
         actions: <Widget>[
           IconButton(
+            tooltip: "Change Language",
             icon: Icon(
               Icons.language,
               color: Colors.grey,
@@ -89,23 +85,25 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context){
+                  builder: (context) {
                     return LanguageSelectorPage();
-                  }
-                )
+                  },
+                ),
               );
             },
           ),
         ],
-
       ),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
             height: 600.0,
+
             child: FutureBuilder<void>(
               future: _initializeControllerFuture,
               builder: (context, snapshot) {
@@ -122,11 +120,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             ),
           ),
           SizedBox(
-            height: 10.0,
+            height: 8.0,
           ),
           ButtonTheme(
             minWidth: 300.0,
-            height: 90.0,
+            height: 100.0,
             child: RaisedButton(
               elevation: 10.0,
               child: Icon(
@@ -184,8 +182,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     _controller.dispose();
     super.dispose();
   }
-
-
 }
 
 class DisplayPictureScreen extends StatefulWidget {
@@ -262,7 +258,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.of(context).text("display_picture"),),
+        title: Text(
+          AppTranslations.of(context).text("display_picture"),
+        ),
         elevation: 10,
       ),
       // The image is stored as a file on the device. Use the `Image.file`
@@ -278,7 +276,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _image == null ? Container() : Image.file(File(imagePath)),
+                  Container(
+                      height: 600,
+                      child: _image == null
+                          ? Container()
+                          : Image.file(File(imagePath))),
                   SizedBox(
                     height: 20,
                   ),
