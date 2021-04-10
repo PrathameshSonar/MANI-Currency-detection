@@ -26,12 +26,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   camera: ^0.5.8+11
-  path_provider: ^1.6.24
+  path_provider: ^2.0.1
   path: ^1.6.4
   tflite: ^1.1.1
-  flutter_launcher_icons: "^0.7.0"
+  flutter_launcher_icons: ^0.7.0
 
-  image_picker: ^0.6.7+14
+
+  image_picker: ^0.7.4
   flutter_tts: ^2.0.0
   light: ^1.0.0
   flashlight: ^0.1.1
