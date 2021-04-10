@@ -3,7 +3,12 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mani/takePictureScreen.dart';
+
+import 'app_translations_delegate.dart';
+import 'application.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,15 +16,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  AppTranslationsDelegate _newLocaleDelegate;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
+    application.onLocaleChanged = onLocaleChange;
     Timer(
       Duration(seconds: 2),
       () => cameraInit(),
     );
+
+
   }
 
   Future<void> cameraInit() async {
@@ -40,8 +52,32 @@ class _SplashScreenState extends State<SplashScreen> {
           // Pass the appropriate camera to the TakePictureScreen widget.
           camera: firstCamera,
         ),
+        localizationsDelegates: [
+          _newLocaleDelegate,
+          //provides localised strings
+          GlobalMaterialLocalizations.delegate,
+          //provides RTL support
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+
+          const Locale("en", ""),
+          const Locale("hi", ""),
+          const Locale("kn", ""),
+          const Locale("mr", ""),
+          const Locale("pa", ""),
+          const Locale("ur", ""),
+
+        ],
       ),
     );
+  }
+
+
+  void onLocaleChange(Locale locale) {
+    setState(() {
+      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
+    });
   }
 
   @override

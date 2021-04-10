@@ -12,11 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MANI',
       theme: ThemeData(
-
-        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashScreen(),
+
     );
   }
 }

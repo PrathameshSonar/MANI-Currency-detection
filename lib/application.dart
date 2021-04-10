@@ -11,6 +11,7 @@ class Application {
   Application._internal();
 
   final List<String> supportedLanguages = [
+
     "English",
     "Hindi",
     "Kannada",
@@ -20,12 +21,13 @@ class Application {
   ];
 
   final List<String> supportedLanguagesCodes = [
+
     "en",
-    "hin",
-    "kannada",
-    "marathi",
-    "punjabi",
-    "urdu",
+    "hi",
+    "kn",
+    "mr",
+    "pa",
+    "ur",
   ];
 
   //returns the list of supported Locales

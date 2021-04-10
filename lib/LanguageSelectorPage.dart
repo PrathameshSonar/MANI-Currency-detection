@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app_translations.dart';
 import 'application.dart';
+
+
 
 class LanguageSelectorPage extends StatefulWidget {
   @override
@@ -11,6 +15,7 @@ class LanguageSelectorPage extends StatefulWidget {
 class _LanguageSelectorPageState extends State<LanguageSelectorPage> {
   static final List<String> languagesList = application.supportedLanguages;
   static final List<String> languageCodesList = application.supportedLanguagesCodes;
+
 
   final Map<dynamic, dynamic> languagesMap = {
     languagesList[0]: languageCodesList[0],
@@ -22,9 +27,16 @@ class _LanguageSelectorPageState extends State<LanguageSelectorPage> {
   };
 
   @override
+
+
+
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
       home: Scaffold(
+
         appBar: AppBar(
           title: Text(
             AppTranslations.of(context).text("title_select_language"),
@@ -32,6 +44,7 @@ class _LanguageSelectorPageState extends State<LanguageSelectorPage> {
         ),
         body: _buildLanguagesList(),
       ),
+
     );
   }
 
@@ -46,8 +59,10 @@ class _LanguageSelectorPageState extends State<LanguageSelectorPage> {
 
   _buildLanguageItem(String language) {
     return InkWell(
+
       onTap: () {
         print(language);
+
         application.onLocaleChanged(Locale(languagesMap[language]));
       },
       child: Center(

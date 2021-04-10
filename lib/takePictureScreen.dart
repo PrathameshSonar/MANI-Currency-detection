@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 
+import 'LanguageSelectorPage.dart';
+import 'app_translations.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -49,6 +50,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -66,13 +69,17 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     _initializeControllerFuture = _controller.initialize();
 
     print(_initializeControllerFuture);
+
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Take a Picture"),
+        title: Text(AppTranslations.of(context).text("take_picture_screen"),),
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -83,13 +90,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context){
-                    //return LanguageSelectorPage();
+                    return LanguageSelectorPage();
                   }
                 )
               );
             },
           ),
         ],
+
       ),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
@@ -176,6 +184,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     _controller.dispose();
     super.dispose();
   }
+
+
 }
 
 class DisplayPictureScreen extends StatefulWidget {
@@ -252,7 +262,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Result"),
+        title: Text(AppTranslations.of(context).text("display_picture"),),
         elevation: 10,
       ),
       // The image is stored as a file on the device. Use the `Image.file`
