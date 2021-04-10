@@ -73,11 +73,11 @@ flutter:
     - assets/labels.txt
     - assets/model_unquant.tflite
     - assets/locale/en.json
-    - assets/locale/localisation_marathi.json
+    - assets/locale/mr.json
     - assets/locale/hi.json
-    - assets/locale/localisation_punjabi.json
-    - assets/locale/localisation_urdu.json
-    - assets/locale/localisation_kannada.json
+    - assets/locale/pa.json
+    - assets/locale/ur.json
+    - assets/locale/kn.json
     - assets/launcher/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
