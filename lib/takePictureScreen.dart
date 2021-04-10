@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'LanguageSelectorPage.dart';
 import 'app_translations.dart';
 
