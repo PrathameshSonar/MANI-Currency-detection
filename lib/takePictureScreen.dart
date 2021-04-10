@@ -105,7 +105,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       body: Column(
         children: <Widget>[
           Container(
-            height: 650.0,
+            height: 600.0,
             child: FutureBuilder<void>(
               future: _initializeControllerFuture,
               builder: (context, snapshot) {
