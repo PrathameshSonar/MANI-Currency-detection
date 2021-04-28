@@ -9,8 +9,11 @@ import 'package:mani/takePictureScreen.dart';
 import 'app_translations_delegate.dart';
 import 'application.dart';
 
-
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({
+    Key key,
+  }) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -18,20 +21,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   AppTranslationsDelegate _newLocaleDelegate;
-
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-
     _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
     application.onLocaleChanged = onLocaleChange;
+
     Timer(
       Duration(seconds: 2),
       () => cameraInit(),
     );
-
-
+  }
+  void onLocaleChange(Locale locale) {
+    setState(() {
+      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
+    });
   }
 
   Future<void> cameraInit() async {
@@ -60,24 +64,15 @@ class _SplashScreenState extends State<SplashScreen> {
           GlobalWidgetsLocalizations.delegate,
         ],
         supportedLocales: [
-
           const Locale("en", ""),
           const Locale("hi", ""),
           const Locale("kn", ""),
           const Locale("mr", ""),
           const Locale("pa", ""),
           const Locale("ur", ""),
-
         ],
       ),
     );
-  }
-
-
-  void onLocaleChange(Locale locale) {
-    setState(() {
-      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
-    });
   }
 
   @override
