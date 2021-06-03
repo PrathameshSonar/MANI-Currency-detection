@@ -11,7 +11,6 @@ class Application {
   Application._internal();
 
   final List<String> supportedLanguages = [
-
     "English",
     "Hindi",
     "Kannada",
@@ -21,7 +20,6 @@ class Application {
   ];
 
   final List<String> supportedLanguagesCodes = [
-
     "en",
     "hi",
     "kn",

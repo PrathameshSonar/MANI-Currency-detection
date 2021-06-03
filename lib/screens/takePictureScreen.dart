@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_better_camera/camera.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 import 'LanguageSelectorPage.dart';
-import 'app_translations.dart';
+import '../utils/app_translations.dart';
 
 
 // A screen that allows users to take a picture using a given camera.
@@ -30,8 +31,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
+
     // To display the current output from the Camera,
     // create a CameraController.
+
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
       widget.camera,
@@ -46,14 +49,59 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     print(_initializeControllerFuture);
   }
 
+  // Flash Toggle Button
+  Widget _flashButton() {
+    IconData iconData = Icons.flash_off;
+    Color color = Colors.black;
+    if (flashMode == FlashMode.alwaysFlash) {
+      iconData = Icons.flash_on;
+      color = Colors.blue;
+    } else if (flashMode == FlashMode.autoFlash) {
+      iconData = Icons.flash_auto;
+      color = Colors.red;
+    }
+    return IconButton(
+      icon: Icon(iconData),
+      color: color,
+      onPressed: _onFlashButtonPressed,
+
+    );
+  }
+
+  FlashMode flashMode = FlashMode.off;
+
+  // Toggle Flash
+  Future<void> _onFlashButtonPressed() async {
+    bool hasFlash = false;
+    if (flashMode == FlashMode.off || flashMode == FlashMode.torch) {
+      // Turn on the flash for capture
+      flashMode = FlashMode.alwaysFlash;
+    } else if (flashMode == FlashMode.alwaysFlash) {
+      // Turn on the flash for capture if needed
+      flashMode = FlashMode.autoFlash;
+    } else {
+      // Turn off the flash
+      flashMode = FlashMode.off;
+    }
+    // Apply the new mode
+    await _controller.setFlashMode(flashMode);
+
+    // Change UI State
+    setState(() {});
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppTranslations.of(context).text("take_picture_screen"),
+          AppTranslations.of(context).text("take_picture_screen"),// == null ? 'Take a Picture' : AppTranslations.of(context).text("take_picture_screen"),
         ),
         actions: <Widget>[
+          _flashButton(),
+
           IconButton(
             tooltip: "Change Language",
             icon: Icon(
@@ -70,6 +118,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               );
             },
           ),
+
+
         ],
       ),
       // Wait until the controller is initialized before displaying the
@@ -100,6 +150,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           SizedBox(
             height: 8.0,
           ),
+
           ButtonTheme(
             minWidth: 300.0,
             height: 100.0,
@@ -121,7 +172,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 HapticFeedback.vibrate();
                 try {
                   // Ensure that the camera is initialized.
+                  await _controller.setFlashMode(flashMode);
                   await _initializeControllerFuture;
+
+                  print("pms");
 
                   // Construct the path where the image should be saved using the
                   // pattern package.
@@ -133,6 +187,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   );
 
                   // Attempt to take a picture and log where it's been saved.
+
                   await _controller.takePicture(path);
 
                   // If the picture was taken, display it on a new screen.

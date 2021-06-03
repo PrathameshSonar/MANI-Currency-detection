@@ -29,10 +29,10 @@ dependencies:
   path_provider: ^2.0.1
   path: ^1.6.4
   tflite: ^1.1.1
-  flutter_launcher_icons: ^0.7.0
+#  flutter_launcher_icons: ^0.7.0
+  flutter_better_camera: ^0.6.1
+  easy_localization: ^3.0.0
 
-
-  image_picker: ^0.7.4
   flutter_tts: ^2.0.0
   light: ^1.0.0
   flashlight: ^0.1.1
@@ -73,12 +73,7 @@ flutter:
   assets:
     - assets/labels.txt
     - assets/model_unquant.tflite
-    - assets/locale/en.json
-    - assets/locale/mr.json
-    - assets/locale/hi.json
-    - assets/locale/pa.json
-    - assets/locale/ur.json
-    - assets/locale/kn.json
+    - assets/locale/
     - assets/launcher/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

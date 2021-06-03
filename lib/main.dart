@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mani/splashScreen.dart';
+import 'package:mani/screens/splashScreen.dart';
 
-import 'app_translations_delegate.dart';
-import 'application.dart';
+
 
 
 void main() {
@@ -11,7 +9,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
 
 
   @override
@@ -22,6 +19,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashScreen(),
+
 
     );
   }

@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mani/takePictureScreen.dart';
+import 'package:mani/screens/takePictureScreen.dart';
 
-import 'app_translations_delegate.dart';
-import 'application.dart';
+import '../utils/app_translations_delegate.dart';
+import '../utils/application.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
